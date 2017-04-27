@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Booking_model_test" file="C:\xampp\htdocs\RestaurantReservationSystem\application\tests\models\Booking_model_test.php" fullPackage="Booking.model" tests="1" assertions="1" failures="0" errors="0" time="0.245686">
+    <testcase name="test_booking" class="Booking_model_test" file="C:\xampp\htdocs\RestaurantReservationSystem\application\tests\models\Booking_model_test.php" line="12" assertions="1" time="0.245686"/>
+  </testsuite>
+</testsuites>

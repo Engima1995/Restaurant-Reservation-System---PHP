@@ -1,0 +1,23 @@
+create database restaurant_reservation_system;
+
+
+CREATE TABLE customer (
+	CustomerID INTEGER NOT NULL AUTO_INCREMENT,
+	Firstname VARCHAR(255) NOT NULL,
+	Lastname VARCHAR(255) NOT NULL,
+	Email VARCHAR(255) NOT NULL,
+	PhoneNumber INTEGER NOT NULL,
+	CONSTRAINT customer_PK PRIMARY KEY (CustomerID)
+);
+
+CREATE TABLE city (
+	CityID INTEGER NOT NULL AUTO_INCREMENT,
+	CityName VARCHAR(255) NOT NULL,
+	Description VARCHAR(255),
+	RestaurantID INTEGER NOT NULL,
+	CONSTRAINT city_PK PRIMARY KEY (CityID),
+	CONSTRAINT restaurant_FK FOREIGN KEY (RestaurantID) REFERENCES restaurant (RestaurantID),
+);
+
+INSERT INTO employees (EmployeeNo, Name, BirthDate, Salary, FullTime, DaysWorked) VALUES (556138, 'Robert Peters', '1971-09-11', 29500, 'Part Time', 456);
+

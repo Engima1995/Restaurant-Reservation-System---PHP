@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <?php echo $header ?>
+</head>
+
+<body>
+
+  <main>
+
+    <section class="top-banner container-fluid">
+
+      <header>
+        <?php echo $navbar ?>
+      </header>
+
+    </section>
+
+    <section class="restaurants-info container-fluid">
+      <?php echo $restaurantsinfo ?>
+    </section>
+
+    <footer class="container-fluid text-center">
+      <?php echo $footer ?>
+    </footer>
+
+  </main>
+
+  <script>
+
+    var slideIndex = 1;
+    showDivs(slideIndex);
+
+    function plusDivs(n) {
+      showDivs(slideIndex += n);
+    }
+
+    function showDivs(n) {
+      var i;
+      var x = document.getElementsByClassName("mySlides");
+      if (n > x.length) {slideIndex = 1}
+      if (n < 1) {slideIndex = x.length}
+      for (i = 0; i < x.length; i++) {
+         x[i].style.display = "none";
+      }
+      x[slideIndex-1].style.display = "block";
+    }
+
+  </script>
+
+</body>
+
+</html>

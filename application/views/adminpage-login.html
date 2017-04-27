@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <?php echo $header ?>
+</head>
+
+<body>
+
+  <main>
+
+    <section class="top-banner container-fluid">
+
+      <header>
+        <?php echo $navbar ?>
+      </header>
+
+    </section>
+
+    <section class="form container-fluid">
+
+      <?php echo validation_errors('<p class=\'alert alert-danger\'>', '</p>'); ?>
+      <?php
+        if($this->session->flashdata('incorrect_user')) {
+          echo '<p class=\'alert alert-danger\'>' . $this->session->flashdata('incorrect_user') . '</p>';
+        }
+      ?>
+      <?php echo form_open('Adminpage/admin_login_form'); ?>
+      <?php echo $admin_login_input ?>
+      <?php echo form_close(); ?>
+
+    </section>
+
+    <footer class="container-fluid text-center">
+      <?php echo $footer ?>
+    </footer>
+
+  </main>
+
+</body>
+
+</html>

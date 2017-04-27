@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <?php echo $header ?>
+</head>
+
+<body>
+
+  <main>
+
+    <section class="top-banner container-fluid">
+
+      <header>
+        <?php echo $navbar ?>
+      </header>
+
+    </section>
+
+    <section class="editcustomer form container-fluid">
+
+      <?php echo validation_errors('<p class=\'alert alert-danger\'>', '</p>'); ?>
+
+      <?php echo form_open('Adminpage/admin_edit_customer'); ?>
+      <?php echo $admin_edit_customer ?>
+      <?php echo form_close(); ?>
+
+    </section>
+
+    <footer class="container-fluid text-center">
+      <?php echo $footer ?>
+    </footer>
+
+  </main>
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+
+  $(function(){
+
+    var array = [];
+
+    $('#myDate').datepicker({
+      dateFormat: 'yy-mm-dd',
+      minDate: 0,
+      beforeShowDay: function(date){
+        var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+        return [ array.indexOf(string) == -1 ]
+      }
+
+    });
+
+  });
+
+  $(function(){
+
+    $('#restaurantoptions').click(function(e) {
+
+      val = $(e.target).val();
+
+      if(val == 'Chinese Street Food' || val == 'Michelin Star Restaurant' || val == 'Jumbo Kingdom') {
+          $("#cityoptions").empty();
+          $("#cityoptions").append('<option value=HongKong>Hong Kong</option>');
+      }else if(val == 'Indian Restaurant' || val == 'Southern Hospitality' || val == 'Balthazar') {
+          $("#cityoptions").empty();
+          $("#cityoptions").append('<option value=NewYork>New York</option>');
+      }else if(val == 'Pizza Palace' || val == 'Entrecoteone' || val == 'Entrecotetwo') {
+          $("#cityoptions").empty();
+          $("#cityoptions").append('<option value=Paris>Paris</option>');
+      }
+
+    });
+
+  });
+
+  </script>
+
+</body>
+
+</html>

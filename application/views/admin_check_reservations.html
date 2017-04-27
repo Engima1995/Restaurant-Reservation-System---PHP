@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <?php echo $header ?>
+</head>
+
+<body>
+
+  <main>
+
+    <section class="top-banner container-fluid">
+
+      <header>
+        <?php echo $navbar ?>
+      </header>
+
+    </section>
+
+    <section class="check_reservations container-fluid">
+      <?php echo $admin_check_reservations_page ?>
+      <?php $admin_reservation_dates_json = json_encode($reservation_dates); ?>
+    </section>
+
+    <footer class="container-fluid text-center">
+      <?php echo $footer ?>
+    </footer>
+
+  </main>
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+
+  $(function(){
+
+    var res_dates = JSON.parse('<?= $admin_reservation_dates_json; ?>');
+
+    var array = [];
+
+    $('#myDate').datepicker({
+      dateFormat: 'yy-mm-dd',
+      beforeShowDay: function(date){
+        var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+        return [ array.indexOf(string) == -1 ]
+      },
+      onSelect: function (dateText, inst) {
+
+        $('#reserveddatestable tbody').empty();
+
+        var date = $(this).val();
+
+        $.each(res_dates, function(index, value) {
+          $.each(value, function(key, value) {
+            for(var i=0; i<value.length; i++) {
+              if(date == value[i]['dates']) {
+                $('#reserveddatestable tbody:last-child').append('<tr><td>'+ value[i]['firstname'] +'</td><td>'+ value[i]['lastname'] +'</td><td>'+ value[i]['email'] +'</td><td>'+ value[i]['phonenumber'] +'</td><td>'+ value[i]['description'] +'</td><td>'+ value[i]['city'] +'</td><td>'+ value[i]['tableno'] +'</td><td>'+ value[i]['numberofpeople'] +'</td><td>'+ value[i]['dates'] +'</td><td>'+ value[i]['times'] +'</td></tr>');
+              }
+            }
+          })
+        })
+
+
+      }
+    });
+
+  });
+
+  </script>
+
+</body>
+
+</html>

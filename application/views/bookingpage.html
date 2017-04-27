@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <?php echo $header ?>
+</head>
+
+<body>
+
+  <main>
+
+    <section class="top-banner container-fluid">
+
+      <header>
+        <?php echo $navbar ?>
+      </header>
+
+    </section>
+
+    <section class="booking container-fluid">
+
+      <?php echo validation_errors('<p class=\'alert alert-danger\'>', '</p>'); ?>
+      <?php
+        if($this->session->flashdata('incorrect_user')) {
+          echo '<p class=\'alert alert-danger\'>' . $this->session->flashdata('incorrect_user') . '</p>';
+        }
+      ?>
+      <?php echo form_open('Booking/customer_booking'); ?>
+      <?php echo $booking ?>
+      <?php echo form_close(); ?>
+
+      <?php $date_info_json = json_encode($datesfull); ?>
+      <?php $time_info_json = json_encode($times); ?>
+      <?php $reserved_time_info_json = json_encode($reservedtimes); ?>
+      <?php $table_info_json = json_encode($table); ?>
+      <?php $reserved_table_info_json = json_encode($reservedtables); ?>
+
+    </section>
+
+    <footer class="container-fluid text-center">
+      <?php echo $footer ?>
+    </footer>
+
+  </main>
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script type="text/javascript">
+
+  $(function(){
+    $('.tab-list').each(function(){                   // Find lists of tabs
+      var $this = $(this);                            // Store this list
+      var $tab = $this.find('li.active');             // Get the active list item
+      var $link = $tab.find('a');                     // Get link from active tab
+      var $panel = $($link.attr('href'));             // Get active panel
+
+      $this.on('click', '.tab-control', function(e) { // When click on a tab
+        e.preventDefault();                           // Prevent link behavior
+        var $link = $(this),                          // Store the current link
+            id = this.hash;                           // Get href of clicked tab
+
+        if (id && !$link.is('.active')) {             // If not currently active
+          $panel.removeClass('active');               // Make panel inactive
+          $tab.removeClass('active');                 // Make tab inactive
+
+          $panel = $(id).addClass('active');          // Make new panel active
+          $tab = $link.parent().addClass('active');   // Make new tab active
+        }
+      });
+    });
+  });
+
+  $(function(){
+
+    //function to check length of time values
+    function getObjectLength (o) {
+      var length = 0;
+
+      for (var i in o) {
+        if (Object.prototype.hasOwnProperty.call(o, i)){
+          length++;
+        }
+      }
+      return length;
+    }
+
+    //parses php objects to jquery
+    var obj = JSON.parse('<?= $date_info_json; ?>');
+    var time = JSON.parse('<?=$time_info_json; ?>');
+    var reservedTimes = JSON.parse('<?=$reserved_time_info_json?>');
+    var tables = JSON.parse('<?=$table_info_json?>');
+    var reservedTables = JSON.parse('<?=$reserved_table_info_json?>');
+    var array = [];
+
+    $.each(obj, function( index, value ) {
+      array.push(value);
+    });
+
+    $('#myDate').datepicker({
+      dateFormat: 'yy-mm-dd',
+      minDate: 0,
+      beforeShowDay: function(date){
+        var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+        return [ array.indexOf(string) == -1 ]
+      },
+      //TIMES
+      onSelect: function (dateText, inst) {
+        var date = $(this).val();
+        var arrTimesDates = new Array();
+        var arrTablesDates = new Array();
+        var indexLength = 0;
+        var valLength = 0;
+        var count = 0;
+        var counter = 0;
+
+        console.log('TIME ' + time);
+        console.log('Table ' + tables);
+        $.each(reservedTimes, function(index, val) {
+          console.log(val);
+        });
+        $.each(reservedTables, function(index, val) {
+          console.log(val);
+        });
+
+        //calculates length of index and values for each key value pairs for times
+        $.each(reservedTimes, function(index, val) {
+          indexLength = ++count;
+        });
+
+        valLength = time.length;
+
+        //for however many index in reserved times, a new arr will store that date within the index
+        for(var index in reservedTimes) {
+          arrTimesDates[counter] = index;
+          counter++;
+        }
+
+        counter = 0;
+
+        //clear all times to begin with
+        $('#dropdowntime').empty();
+
+        //for each time, append value to drop down list
+        $.each(time, function(index, val) {
+          $('<option />', {value: val, text: val}).appendTo('#dropdowntime');
+        });
+
+        //this updates the time to each date
+        for(var i=0; i<count; i++) {
+
+          if(date == arrTimesDates[i]) {
+
+            $('#dropdowntime').empty();
+
+            for(var j=0; j<=valLength; j++) {
+              console.log("TIMES: " + reservedTimes[date][j]);
+              if(reservedTimes[date][j] == undefined) {
+
+              }else {
+                $('<option />', {value: reservedTimes[date][j], text: reservedTimes[date][j]}).appendTo('#dropdowntime');
+              }
+            }
+          }
+        }
+
+        //TABLES
+
+        var a;
+        indexLength = 0;
+        valLength = 0;
+        count = 0;
+        counter = 0;
+
+        $.each(reservedTables, function(index, val) {
+          indexLength = ++count;
+        });
+
+        valLength = tables.length;
+
+        for(var index in reservedTimes) {
+          arrTablesDates[counter] = index;
+          counter++;
+        }
+
+        $('#dropdowntable').empty();
+        $('.table-view').empty();
+
+        $.each(tables, function(index, val) {
+          $('<option />', {value: val, text: val}).appendTo('#dropdowntable');
+          a = $('<a>', {'href':'#', 'class': val}).text(val);
+          $('.table-view').append(a);
+        });
+
+        for(var i=0; i<count; i++) {
+
+          if(date == arrTablesDates[i]) {
+
+            $('#dropdowntable').empty();
+            $('.table-view').empty();
+
+            for(var j=0; j<=valLength; j++) {
+              console.log("TABLES: " + reservedTables[date][j]);
+              if(reservedTables[date][j] == undefined) {
+
+              }else {
+                $('<option />', {value: reservedTables[date][j], text: reservedTables[date][j]}).appendTo('#dropdowntable');
+                a = $('<a>', {'href':'#', 'class': reservedTables[date][j]}).text(reservedTables[date][j]);
+                $('.table-view').append(a);
+              }
+            }
+          }
+        }
+
+      }
+    });
+
+  });
+
+  $(function(){
+
+    var txt = '';
+
+    $('.table-view').click(function(e) {
+
+      txt = $(e.target).text();
+
+      if(txt == '1') {
+          $("#dropdowntable").val('1');
+          $("#tableCapacity").val('3');
+      }else if(txt == '2') {
+          $("#dropdowntable").val('2');
+          $("#tableCapacity").val('5');
+      }else if(txt == '3') {
+          $("#dropdowntable").val('3');
+          $("#tableCapacity").val('7');
+      }else if(txt == '4') {
+          $("#dropdowntable").val('4');
+          $("#tableCapacity").val('9');
+      }else if(txt == '5') {
+          $("#dropdowntable").val('5');
+          $("#tableCapacity").val('11');
+      }else if(txt == '6') {
+          $("#dropdowntable").val('6');
+          $("#tableCapacity").val('13');
+      }else if(txt == '7') {
+          $("#dropdowntable").val('7');
+          $("#tableCapacity").val('13');
+      }else if(txt == '8') {
+          $("#dropdowntable").val('8');
+          $("#tableCapacity").val('13');
+      }else if(txt == '9') {
+          $("#dropdowntable").val('9');
+          $("#tableCapacity").val('13');
+      }
+
+    });
+
+    $('#dropdowntable').click(function(e) {
+
+      val = $(e.target).val();
+
+      if(val == '1') {
+          $("#tableCapacity").val('3');
+      }else if(val == '2') {
+          $("#tableCapacity").val('5');
+      }else if(val == '3') {
+          $("#tableCapacity").val('7');
+      }else if(val == '4') {
+          $("#tableCapacity").val('9');
+      }else if(val == '5') {
+          $("#tableCapacity").val('11');
+      }else if(val == '6') {
+          $("#tableCapacity").val('13');
+      }else if(val == '7') {
+          $("#tableCapacity").val('13');
+      }else if(val == '8') {
+          $("#tableCapacity").val('13');
+      }else if(val == '9') {
+          $("#tableCapacity").val('13');
+      }
+
+    });
+
+  });
+
+  </script>
+
+</body>
+
+</html>

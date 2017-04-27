@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <?php echo $header ?>
+</head>
+
+<body>
+
+  <main>
+
+    <section class="top-banner container-fluid">
+
+      <header>
+        <?php echo $navbar ?>
+      </header>
+
+    </section>
+
+    <section class="manage-bookings container-fluid">
+      <?php echo $admin_bookings ?>
+    </section>
+
+    <footer class="container-fluid text-center">
+      <?php echo $footer ?>
+    </footer>
+
+  </main>
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+
+  $(function(){
+
+    $('.custinfo').click(function() {
+      if($('.custinfo').is(':checked')) {
+
+        var $array = [];
+        var $row = $(this).closest("tr");
+        $array.push($row.find(".firstname").text());
+        $array.push($row.find(".lastname").text());
+        $array.push($row.find(".email").text());
+        $array.push($row.find(".phonenumber").text());
+        $array.push($row.find(".description").text());
+        $array.push($row.find(".city").text());
+        $array.push($row.find(".tableno").text());
+        $array.push($row.find(".numberofpeople").text());
+        $array.push($row.find(".dates").text());
+        $array.push($row.find(".times").text());
+
+        $.ajax({
+            type: 'post',
+            url: '<?php echo base_url('Adminpage/admin_edit_customer');?>',
+            data: {
+                '<?php echo $this->security->get_csrf_token_name(); ?>': '<?php echo $this->security->get_csrf_hash(); ?>',
+                'fname': $array[0],
+                'lname': $array[1],
+                'mail': $array[2],
+                'pnumber': $array[3],
+                'des': $array[4],
+                'c': $array[5],
+                'tno': $array[6],
+                'noofpeople': $array[7],
+                'date': $array[8],
+                'time': $array[9]
+            }
+        });
+
+      }
+    });
+
+  });
+
+  </script>
+
+</body>
+
+</html>
